@@ -1472,6 +1472,19 @@ contains
 
   call mpp_clock_end (id_update)
 
+!---- Apply idealized heating rate profile if desired -----
+  Atm(mygrid)%idealized_heating_tendency(isc:iec,jsc:jec,1:npz) = Atm(mygrid)%pt(isc:iec,jsc:jec,1:npz)
+  if (Atm(mygrid)%flagstruct%idealized_heating_rate_breakpoint .gt. 0) then
+     do k = 1, npz
+       if (k .lt. Atm(mygrid)%flagstruct%idealized_heating_rate_breakpoint) then
+          Atm(mygrid)%pt(isc:iec,jsc:jec,k) = Atm(mygrid)%pt(isc:iec,jsc:jec,k) - Atm(mygrid)%flagstruct%idealized_heating_rate_magnitude * dt_atmos
+       else
+          Atm(mygrid)%pt(isc:iec,jsc:jec,k) = Atm(mygrid)%pt(isc:iec,jsc:jec,k) + Atm(mygrid)%flagstruct%idealized_heating_rate_magnitude * dt_atmos
+       endif
+     enddo
+  endif
+  Atm(mygrid)%idealized_heating_tendency(isc:iec,jsc:jec,1:npz) = (Atm(mygrid)%pt(isc:iec,jsc:jec,1:npz) - Atm(mygrid)%idealized_heating_tendency(isc:iec,jsc:jec,1:npz)) / dt_atmos
+
   call mpp_clock_begin(id_fv_diag)
 
   !---- diagnostics for FV dynamics -----

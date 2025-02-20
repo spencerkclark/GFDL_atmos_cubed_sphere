@@ -319,6 +319,9 @@ module fv_control_mod
      logical, pointer :: restart_from_agrid_winds
      logical, pointer :: write_optional_dgrid_vel_rst
      logical, pointer :: pass_full_omega_to_physics_in_non_hydrostatic_mode
+
+     real, pointer :: idealized_heating_rate_magnitude  ! Strength of idealized heating rate
+     integer, pointer :: idealized_heating_rate_breakpoint  ! Vertical level (1-indexed) at which to switch to a positive heating rate
      !!!!!!!!!! END POINTERS !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
      this_grid = -1 ! default
@@ -863,6 +866,9 @@ module fv_control_mod
        restart_from_agrid_winds      => Atm%flagstruct%restart_from_agrid_winds
        write_optional_dgrid_vel_rst  => Atm%flagstruct%write_optional_dgrid_vel_rst
        pass_full_omega_to_physics_in_non_hydrostatic_mode => Atm%flagstruct%pass_full_omega_to_physics_in_non_hydrostatic_mode
+
+       idealized_heating_rate_magnitude => Atm%flagstruct%idealized_heating_rate_magnitude
+       idealized_heating_rate_breakpoint => Atm%flagstruct%idealized_heating_rate_breakpoint
      end subroutine set_namelist_pointers
 
 
@@ -959,7 +965,8 @@ module fv_control_mod
             write_only_coarse_intermediate_restarts, &
             write_coarse_agrid_vel_rst, write_coarse_dgrid_vel_rst, &
             restart_from_agrid_winds, write_optional_dgrid_vel_rst, &
-            pass_full_omega_to_physics_in_non_hydrostatic_mode, ignore_rst_cksum
+            pass_full_omega_to_physics_in_non_hydrostatic_mode, ignore_rst_cksum, &
+            idealized_heating_rate_breakpoint, idealized_heating_rate_magnitude
 
 
        ! Read FVCORE namelist

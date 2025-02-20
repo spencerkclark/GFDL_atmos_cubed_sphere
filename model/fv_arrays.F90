@@ -927,6 +927,12 @@ module fv_arrays_mod
   logical :: pass_full_omega_to_physics_in_non_hydrostatic_mode = .false.  !< Default to passing local omega to physics in non-hydrostatic mode
   logical :: restart_from_agrid_winds = .false.  !< Whether to restart from A-grid winds
   logical :: write_optional_dgrid_vel_rst = .true. !< Whether to write out optional D-grid winds when restart_from_agrid_winds is active
+
+  real :: idealized_heating_rate_magnitude = 0.0  !< Strength of idealized heating rate
+  integer :: idealized_heating_rate_breakpoint = -1  !< Vertical level (1-indexed) at which to switch 
+                                                     !< to a positive heating rate from a negative heating rate.
+                                                     !< If < 0 (default) do not apply any heating rate.
+
   end type fv_flags_type
 
   type fv_nest_BC_type_3D
@@ -1372,6 +1378,8 @@ module fv_arrays_mod
      type(sg_diag_type) :: sg_diag
      type(coarse_restart_type) :: coarse_restart
      type(fv_coarse_graining_type) :: coarse_graining
+
+     real, _ALLOCATABLE :: idealized_heating_tendency(:,:,:)     _NULL  !< tendency of applied idealized heating (for diagnostic purposes).
   end type fv_atmos_type
 
 contains

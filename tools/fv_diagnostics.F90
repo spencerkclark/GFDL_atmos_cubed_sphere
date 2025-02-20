@@ -800,6 +800,12 @@ contains
           endif
        endif
 
+       id_idealized_heating_tendency = register_diag_field ( trim(field), 'idealized_heating_tendency', axes(1:3), Time,           &
+          'tendency of applied idealized heating', 'K/s', missing_value=missing_value )
+       if ((id_idealized_heating_tendency > 0) .and. (.not. allocated(Atm(n)%idealized_heating_tendency))) then
+          allocate (Atm(n)%idealized_heating_tendency(isc:iec,jsc:jec,1:npz))
+          Atm(n)%idealized_heating_tendency = 0.0
+       endif
 !
       do i=1,nplev
         write(plev,'(I5)') levs(i)
@@ -1835,6 +1841,8 @@ contains
                                                 Atm(n)%inline_mp%t_dt(isc:iec,jsc:jec,1:npz), Time)
        if (id_qv_dt_diabatic > 0) used=send_data(id_qv_dt_diabatic, Atm(n)%phys_diag%phys_qv_dt(isc:iec,jsc:jec,1:npz) + &
                                                 Atm(n)%inline_mp%qv_dt(isc:iec,jsc:jec,1:npz), Time)
+
+       if (id_idealized_heating_tendency > 0) used=send_data(id_idealized_heating_tendency, Atm(n)%idealized_heating_tendency(isc:iec,jsc:jec,1:npz), Time)
 
        if(id_c15>0 .or. id_c25>0 .or. id_c35>0 .or. id_c45>0) then
           call wind_max(isc, iec, jsc, jec ,isd, ied, jsd, jed, Atm(n)%ua(isc:iec,jsc:jec,npz),   &
