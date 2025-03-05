@@ -801,7 +801,7 @@ contains
        endif
 
        id_idealized_heating_tendency = register_diag_field ( trim(field), 'idealized_heating_tendency', axes(1:3), Time,           &
-          'tendency of applied idealized heating', 'K/s', missing_value=missing_value )
+          'tendency of applied idealized heating (prior to cp / cv scaling)', 'K/s', missing_value=missing_value )
        if ((id_idealized_heating_tendency > 0) .and. (.not. allocated(Atm(n)%idealized_heating_tendency))) then
           allocate (Atm(n)%idealized_heating_tendency(isc:iec,jsc:jec,1:npz))
           Atm(n)%idealized_heating_tendency = 0.0
