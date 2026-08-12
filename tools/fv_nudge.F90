@@ -841,8 +841,7 @@ module fv_nwp_nudge_mod
    real, intent(inout):: q(isd:ied,jsd:jed,npz,nwat)
 ! local
    real, dimension(is:ie,js:je):: ps_dt
-   integer, parameter:: kmax = 100
-   real:: pn0(kmax+1), pk0(kmax+1)
+   real:: pn0(km+1), pk0(km+1)
    real, dimension(is:ie,npz+1):: pe2, peln
    real:: pst, dbk, pt0, rdt, bias
    integer i, j, k, iq
@@ -852,7 +851,6 @@ module fv_nwp_nudge_mod
    area => gridstruct%area
 
 ! Adjust interpolated ps to model terrain
-   if ( kmax < km ) call mpp_error(FATAL,'==> KMAX must be larger than km')
 
    do j=js,je
      do i=is,ie
