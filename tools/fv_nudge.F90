@@ -887,7 +887,7 @@ module fv_nwp_nudge_mod
 
    if( do_ps_bias ) call ps_bias_correction( ps_dt, is, ie, js, je, isd, ied, jsd, jed, area)
 
-#ifdef CONSV_HGHT
+  if (conserve_hgt) then
 ! Convert tracer moist mixing ratio to mass
    do iq=1,nwat
      do k=1,npz
@@ -925,7 +925,7 @@ module fv_nwp_nudge_mod
        enddo
      enddo
    enddo
-#endif
+  endif
 
 ! Update ps:
    do j=js,je
@@ -945,7 +945,7 @@ module fv_nwp_nudge_mod
      enddo
    enddo
 
-#ifdef CONSV_HGHT
+  if (conserve_hgt) then
    do j=js,je
      do k=2,npz+1
        do i=is,ie
@@ -979,7 +979,7 @@ module fv_nwp_nudge_mod
        enddo
      enddo
    enddo
-#endif
+  endif
 
  end subroutine ps_nudging
 
